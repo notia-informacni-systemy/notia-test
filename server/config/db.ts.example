@@ -1,0 +1,14 @@
+/*
+ * This is a template config file which is versioned by Git.
+ * When starting the development you have to COPY (not move) this file into '/server/config/db.ts' which will be ignored by Git.
+ * That will be the real configuration file to store the sensitive data to.
+ */
+export module DbConfig {
+  export let DB = {
+    HOST: 'host',
+    DATABASE: 'db-name',
+    USER: 'username',
+    PASSWORD: 'secret-password',
+    PORT: 5432
+  };
+}

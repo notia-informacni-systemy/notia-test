@@ -24,8 +24,8 @@ Až zabalí všechny, objednávku uzavře.
 
 ![Ukázka](example.jpg)
 
-![Schéma databáze](database.png)
-
 ### Databáze
 - Databáze je PostgreSQL. Konfigurace připojení je popsána v README.md.
 - O heslo je mi třeba napsat na (adam . podrouzek (zavinac) gmail . com)
+
+![Schéma databáze](database.png)

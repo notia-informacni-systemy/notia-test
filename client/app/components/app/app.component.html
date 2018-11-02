@@ -1,0 +1,22 @@
+<!--The content below is only a placeholder and can be replaced.-->
+<div class="container">
+
+  <div class="jumbotron">
+    <h1 class="text-center">Welcome to {{m_title}}!</h1>
+    <hr />
+    <img class="mx-auto d-block" width="112" src="assets/notia-logo-bw.png">
+  </div>
+
+  <button class="btn btn-primary" (click)="onButtonClicked()">Test endpoint</button>
+
+  <router-outlet></router-outlet>
+
+</div>
+
+<footer class="footer">
+  <div class="container">
+    <span class="d-block text-center text-muted">
+      Created by {{m_author}}
+    </span>
+  </div>
+</footer>

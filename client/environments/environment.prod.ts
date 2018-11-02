@@ -1,3 +1,5 @@
 export const environment = {
-  production: true
+  production: true,
+  name: 'production',
+  version: '' // loaded asynchronously in APP_INITIALIZER
 };

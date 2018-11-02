@@ -1,76 +1,51 @@
-# NOTIA test project
-- Project consists of 2 separate applications: **frontend** + **backend** (server) 
-- Frontend app is in Angular 4 and created with Angular-CLI 
-- Backend app is in Node.js and Express
+# Zadání testovacího projektu
+- Úkolem je si vyzkoušet vývoj full-stack aplikace, tedy frontend, backend a databázovou část
+- Zadání je spíše volnějšího rázu, lze si vymyslet, přidat nebo změnit cokoliv
 
-## Getting started
-- To get started run:
-```
-npm install
-```
-- Next step is to create a database configuration file */server/config/db.ts.*
-A template file for this configuration is */server/config/db.ts.example.* You can use the following command:
-```
-cp server/config/db.ts.example server/config/db.ts
-```
-- This *db.ts* file containing the real database configuration should never be tracked in Git. Therefore the file is already included in *.gitignore.*
-If you decide to call your configuration file something else, you need to add it to *.gitignore* yourself
-- Last step is to make a fresh dev-build so you have the */dist* folder ready:
-```
-npm run build:all:dev
-```
+## Osnova
+Jedná se o aplikaci na zpracování (expedici) objednávek.
 
-## Development
-- When developing, run:
-```
-npm run watch:all
-```
-- Browser should open automatically. If not, open it and load [localhost:4200](http://localhost:4200)
-- When making changes to the frontend the code automatically re-compiles when saved and the browser refreshes. Same thing happens with the backend app - when changes are made the backend app re-compiles and the node server restarts.
+**Situace:** Expedient je ve skladu a balí objednávku. Vezme papír s vytištěnou objednávkou a sejme její čarový EAN kód.
+V aplikaci uvidí seznam položek, které musí zabalit. Bere je tedy postupně do ruky, "odpípne" je čtečkou kódů a dá do balíku.
+Až zabalí všechny, objednávku uzavře.
 
-### Frontend app structure
-- All frontend files are in */client/* folder. All frontend source files are then in sub-folder *app/*
-- App's components go in folder *components/,* interfaces in folder *interfaces/* and so on 
-- App's root component is called **AppComponent**
-- Routing is defined in *app-routing.module.ts*
+1. Uživatel, který je identifikován svým EAN kódem, se nejprve přihlásí do aplikace
+   - Informace o přihlášeném uživateli budou od této doby zobrazené v horní části obrazovky (viz [doc/example.jpg](doc/example.jpg)) 
+2. Uživatel napíše (zadá čtečkou kódů) do vyhledávacího pole EAN kód objednávky
+   - Načtou se položky objednávky a zobrazí se v seznamu (viz [doc/example.jpg](doc/example.jpg))
+3. Do vyhledávacího pole bude nyní uživatel zadávat EAN kód jednotlivých položek v objednávce.
+   - Pokud se jedná o položku, jejíž množství je vyšší než 1, zobrazí se číselník, kde se musí zadat počet položek, které se ve 
+   skutečnosti balí 
+     - Situace: Mám v objednávce položku A s množstvím 2. V ruce mám však jen jednu položku A. Číselníkem 
+   tak potvrdím, že jsem zatím zabalil pouze 1 položku A, tím pádem ještě 1 zbývá
+4. Po zabalení všech položek se tlačítkem uzavře objednávka. U položek a u objednávky se uloží, který uživatel je expedoval.
+   - Pokud má uživatel speciální oprávnění (sloupec *superuser* v databázi), může ukončit nekompletní objednávku
 
-#### Frontend code scaffolding
-- When creating new components, services, interfaces etc., use generator provided by angular-cli
-```
-ng g component components/my-new-component
-ng g interface interfaces/my-new-interface
-ng g pipe pipes/my-new-pipe
-```
-- For more information about generation commands see [here](https://github.com/angular/angular-cli/wiki/generate)
+Následující ukázka je __pouze ilustrativní__, není nutné přesně kopírovat design.
 
-### Backend app structure
-- All backend files are in */server/* folder
-- Server's main file is *server.ts*
-- **Routing** is defined in *router.ts*
-- **Models** are in 'models/' sub-folder. Models should be the only place where you interact with the database
-- **Controllers** in sub-folder 'controllers/' handle REST requests and use mentioned models to get the data
-- For database access use **Db** singleton class defined in *helpers/db.ts*
-  - You must call `Db.init()` before using the class (this project already calls it in *server.ts*)
-  - Database connection configuration is specified in **DbConfig** module in *db.ts* (which you must create yourself initially - see section *Getting started*)
-  - Use `Db.query()` to execute SQL
-    
-### How the dev environment works
-Under the hood there are two instances running. One instance (run by `ng serve`) serves only the frontend app - that's the one you are loading in the browser.
-The other instance is running the Node backend (default on port 9002). In development mode this instance only serves for API requests processing. 
-Whenever there is a REST API request on *localhost:4200/api/&ast;* it gets re-routed to the Node backend which then processes that request. In production mode everything is served by the backend app.
+![Ukázka](doc/example.jpg)
 
-The re-route/proxy path is by default *localhost:4200/api/&ast;*. It can be changed or extended in *proxy.config.json*.
+## Databáze
+- Databáze je PostgreSQL. Reálnou konfiguraci připojení, která se necommituje do gitu, __je třeba vytvořit__. V [server/config/db-config.example.ts](server/config/db-config.example.ts) je ukázková konfigurace. Tento soubor je nutné zkopírovat do stejného adresáře, vyplnit reálnou konfiguraci a přejmenovat jej na __db-config.ts__. Ten je zapsán v [.gitignore](.gitignore) a nebude tudíž verzován.
 
-## Production
+- Na následujícím obrázku je znázorněno schéma databáze:
 
-- For clean production build run:
-```
-npm run build:all:prod
-```
+![Schéma databáze](doc/database.png)
 
-- If you want make a production build and test-run the server afterwards run:
-```
-npm run run:prod
-```
+- Tabulky jsou vytvořeny, ale nejsou v nich (pravděpodobně) žádná data. Je proto třeba mít nějaký database-browser (třeba PgAdmin 4), připojit se k databázi a nějaká data si tam vložit.
 
-- Build process creates */dist* folder with */client* and */server* sub-folders where both front and backend apps are compiled'. On production server simply run `node dist/server/server.js`.
+## Instalace
+
+Stačí si forknout a naklonovat tento repozitář a spustit `npm install`.
+
+## Vývoj
+
+Spuštěním npm skriptu `npm run watch:all` se spustí kompilace backendu a frontendu a poté by se mělo otevřít okno v prohlížeči. Pokud se npm skript nepodaří spustit, tak je třeba se podívat do souboru [scripts/watch.sh](scripts/watch.sh), který se npm skriptem spouští. Pod linuxem by to mělo fungovat hned, na windowsech možná ne - v tom případě by bylo asi nejlepší mít na windowsech Bash (Cygwin) a nebo to dělat ve virtuálu na linuxu.
+
+Pokud watch proces proběhne v pořádku, ale okno v prohlížeči se neotevře, tak by se mělo dát ručně otevřít navigací na adresu [localhost:4200](localhost:4200). Poté už lze psát kód. Při změně a uložení kódu z frontendu se okno prohlížeče automaticky refreshne.
+
+Spuštěním npm skriptu `npm run build:all:prod` se spustí produkční AOT build. Ten není pro tuto úlohu příliš podstatný, ale dá se jím zkontrolovat, jestli je kód dobře napsaný pro produkční build.
+
+Pro přidávání nových Angular komponent (serviců, direktiv, atd.) je vhodné použít [angular-cli](https://cli.angular.io/) - viz příkaz `ng generate`.
+
+Soubory s testy jsou sice v tomto projektu zahrnuty, ale v této úloze je není nutné psát.

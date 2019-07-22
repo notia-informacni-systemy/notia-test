@@ -36,7 +36,7 @@ Následující ukázka je __pouze ilustrativní__, není nutné přesně kopíro
 
 ## Instalace
 
-Stačí si forknout a naklonovat tento repozitář a spustit `npm install`.
+Stačí si forknout a naklonovat tento repozitář a spustit `npm install`. Je nutné mít alespoň __Node 10__.
 
 ## Vývoj
 
